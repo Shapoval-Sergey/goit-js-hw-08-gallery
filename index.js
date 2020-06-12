@@ -2,7 +2,8 @@ import items from './gallery-items.js'; //eslint-disable-line
 
 const listRef = document.querySelector('.js-gallery');
 
-const createItem = function(obj) {
+let count = 0;
+function createItem(obj) {
   const item = document.createElement('li');
   const link = document.createElement('a');
   const img = document.createElement('img');
@@ -12,57 +13,66 @@ const createItem = function(obj) {
   img.classList.add('gallery__image');
   img.setAttribute('src', obj.preview);
   img.setAttribute('data-source', obj.original);
+  img.setAttribute('data-index', `${count - 1}`);
   img.setAttribute('alt', obj.description);
   link.appendChild(img);
   item.appendChild(link);
   return item;
-};
+}
 
-const arrImg = items.map(item => {
-  return createItem(item);
+const arrImg = items.map(objImg => {
+  count += 1;
+  return createItem(objImg);
 });
 
 listRef.append(...arrImg);
-console.log(listRef);
 
-// const modalRef = document.querySelector('.js-lightbox');
+console.dir(arrImg);
+
 const modalImageRef = document.querySelector('.lightbox__image');
-const openModal = document.querySelector('.lightbox');
-const closeModalBtn = document.querySelector(
+const galleryImgRef = document.querySelector('.gallery__image');
+const openModalRef = document.querySelector('.lightbox');
+const closeModalBtnRef = document.querySelector(
   'button[data-action="close-lightbox"]',
 );
-// const backdropRef = document.querySelector('.js-backdrop');
 
-const onOpenModal = function() {
-  openModal.classList.add('is-open');
-};
+function onPressEscape(event) {
+  if (event.code === 'Escape') {
+    onCloseModal();
+  }
+}
 
-const onCloseModal = function() {
-  openModal.classList.remove('is-open');
-};
-
-const onImgClick = function(event) {
+function onOpenModal(event) {
   event.preventDefault();
   if (event.target.nodeName !== 'IMG') {
     return;
   }
   const imageTag = event.target;
   const largeImage = imageTag.dataset.source;
+  console.dir(imageTag.dataset.index);
   modalImageRef.src = largeImage;
-  onOpenModal();
-};
+  openModalRef.classList.add('is-open');
+  window.addEventListener('keydown', onPressEscape);
+}
 
-const onBtnClick = function(event) {
-  // console.log(event.target.nodeName);
-  if (event.target.nodeName !== 'BUTTON') {
-    return;
-  }
+function onCloseModal() {
+  openModalRef.classList.remove('is-open');
+  modalImageRef.src = '';
+  window.removeEventListener('keydown', onPressEscape);
+}
+
+function onOverlayClick() {
   onCloseModal();
-};
+}
 
-listRef.addEventListener('click', onImgClick);
-openModal.addEventListener('click', onBtnClick);
-// closeModalBtn.addEventListener('click', onBtnClick);
-openModal.addEventListener('click', onOpenModal);
-closeModalBtn.addEventListener('click', onCloseModal);
-// backdropRef.addEventListener('click', onBackDropClick);
+function onLeaftImg(event) {
+  if (event.code === 'ArrowRight') {
+    const indexImg = Number(event.target.children[0].dataset.index);
+  }
+}
+
+listRef.addEventListener('click', onOpenModal);
+closeModalBtnRef.addEventListener('click', onCloseModal);
+openModalRef.addEventListener('click', onOverlayClick);
+
+window.addEventListener('keydown', onLeaftImg); // ArrowRight, ArrowLeft
