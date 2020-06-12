@@ -25,22 +25,20 @@ const arrImg = items.map(item => {
 listRef.append(...arrImg);
 console.log(listRef);
 
-const modalRef = document.querySelector('js-lightbox');
+// const modalRef = document.querySelector('.js-lightbox');
 const modalImageRef = document.querySelector('.lightbox__image');
 const openModal = document.querySelector('.lightbox');
 const closeModalBtn = document.querySelector(
-  'button[data-action="close-modal"]',
+  'button[data-action="close-lightbox"]',
 );
-const backdropRef = document.querySelector('.js-backdrop');
+// const backdropRef = document.querySelector('.js-backdrop');
 
 const onOpenModal = function() {
-  openModal.classList.add('.is-open');
-  console.log(modalImageRef);
+  openModal.classList.add('is-open');
 };
 
-const onOpenModal = function() {
-  openModal.classList.remove('.is-open');
-  console.log(modalImageRef);
+const onCloseModal = function() {
+  openModal.classList.remove('is-open');
 };
 
 const onImgClick = function(event) {
@@ -49,13 +47,22 @@ const onImgClick = function(event) {
     return;
   }
   const imageTag = event.target;
-  //   console.dir(imageTag.src);
   const largeImage = imageTag.dataset.source;
   modalImageRef.src = largeImage;
   onOpenModal();
 };
 
+const onBtnClick = function(event) {
+  // console.log(event.target.nodeName);
+  if (event.target.nodeName !== 'BUTTON') {
+    return;
+  }
+  onCloseModal();
+};
+
 listRef.addEventListener('click', onImgClick);
-// openModal.addEventListener('click', onOpenModal);
+openModal.addEventListener('click', onBtnClick);
+// closeModalBtn.addEventListener('click', onBtnClick);
+openModal.addEventListener('click', onOpenModal);
 closeModalBtn.addEventListener('click', onCloseModal);
 // backdropRef.addEventListener('click', onBackDropClick);
