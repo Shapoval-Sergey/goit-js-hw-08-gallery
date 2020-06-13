@@ -71,7 +71,7 @@ function onLeaftImg(event) {
     indexImg += 1;
   }
 
-  if (event.code === 'ArrowLeft' && indexImg >= 0) {
+  if (event.code === 'ArrowLeft' && indexImg > 0) {
     indexImg -= 1;
   }
   modalImageRef.dataset.index = String(indexImg);
