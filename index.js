@@ -49,8 +49,8 @@ function onOpenModal(event) {
   }
   const imageTag = event.target;
   const largeImage = imageTag.dataset.source;
-  console.dir(imageTag.dataset.index);
   modalImageRef.src = largeImage;
+  modalImageRef.setAttribute('data-index', `${imageTag.dataset.index}`);
   openModalRef.classList.add('is-open');
   window.addEventListener('keydown', onPressEscape);
 }
@@ -66,9 +66,16 @@ function onOverlayClick() {
 }
 
 function onLeaftImg(event) {
-  if (event.code === 'ArrowRight') {
-    const indexImg = Number(event.target.children[0].dataset.index);
+  let indexImg = Number(modalImageRef.dataset.index);
+  if (event.code === 'ArrowRight' && indexImg < items.length - 1) {
+    indexImg += 1;
   }
+
+  if (event.code === 'ArrowLeft' && indexImg >= 0) {
+    indexImg -= 1;
+  }
+  modalImageRef.dataset.index = String(indexImg);
+  modalImageRef.src = items[indexImg].original;
 }
 
 listRef.addEventListener('click', onOpenModal);
